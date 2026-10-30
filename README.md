@@ -1,8 +1,10 @@
-# evaluar-accion — Skill para Claude
+# evaluar-accion — Skill para Claude, ChatGPT, Gemini y más
 
 🇨🇱 **Español (Chile)** · [🇺🇸 English (US)](README.en-US.md)
 
-Una [skill de Claude](https://support.claude.com/es/articles/12512180-use-skills-in-claude) que evalúa una acción con un **scorecard de 100 puntos** y entrega un veredicto, un semáforo de mercado y un plan de entrada escalonado.
+Una skill que evalúa una acción con un **scorecard de 100 puntos** y entrega un veredicto, un semáforo de mercado y un plan de entrada escalonado.
+
+Sigue el estándar abierto [Agent Skills](https://agentskills.io/) (una carpeta con un archivo `SKILL.md`), así que funciona en Claude, ChatGPT, Gemini, Codex, Gemini CLI y otros agentes compatibles.
 
 Está pensada para quien invierte desde Chile en acciones de EE.UU. (y a veces chilenas), con horizonte de mediano/largo plazo y compra por tramos. **Siempre responde en español.**
 
@@ -32,17 +34,21 @@ Si le pasas varios tickers, los evalúa uno por uno y cierra con una tabla compa
 
 ## Instalación
 
+> **Requisito en cualquier asistente: búsqueda web activada.** La skill no usa precios ni cifras de memoria; sin búsqueda web te va a avisar y no va a evaluar.
+
+Casi todas las opciones usan el mismo ZIP: [`evaluar-accion.zip`](https://github.com/v-dev-cl/evaluar-accion-skill/releases/latest/download/evaluar-accion.zip) (desde [Releases](https://github.com/v-dev-cl/evaluar-accion-skill/releases/latest)). No lo descomprimas.
+
+> No uses el botón verde **Code → Download ZIP** del repo: ese ZIP trae el README y otros archivos, y los asistentes lo rechazan.
+
+Los pasos para ChatGPT y Gemini vienen de la documentación oficial de cada proveedor (octubre de 2026). Los menús cambian seguido, así que pueden variar un poco.
+
 ### Opción 1 — Claude.ai (web y app de escritorio)
 
-Necesitas tener activada la ejecución de código. La skill usa búsqueda web, así que también tiene que estar disponible en tu chat.
-
-1. **Descarga el ZIP:** [`evaluar-accion.zip`](https://github.com/v-dev-cl/claude-skill-evaluar-accion/releases/latest/download/evaluar-accion.zip) (desde [Releases](https://github.com/v-dev-cl/claude-skill-evaluar-accion/releases/latest)). No lo descomprimas.
-   > No uses el botón verde **Code → Download ZIP** del repo: ese ZIP trae el README y otros archivos, y Claude lo rechaza.
-2. **Activa la ejecución de código:**
+1. **Activa la ejecución de código:**
    - **Planes Free, Pro y Max:** *Configuración > Capacidades* y activa **Ejecución de código y creación de archivos** (en el diseño nuevo de Configuración se llama **Crear y editar archivos**).
    - **Planes Team y Enterprise:** *Configuración de la organización > Complementos y habilidades*, pestaña **Política**, y verifica que estén activas **Ejecución de código en la nube y creación de archivos** y **Habilidades**. En Enterprise lo tiene que hacer un owner.
-3. **Sube la skill:** *Personalizar > Habilidades*, botón **+**, luego **+ Crear habilidad**, después **Cargar una habilidad**, y sube `evaluar-accion.zip`.
-4. **Actívala:** busca `evaluar-accion` en la lista y prende su interruptor.
+2. **Sube la skill:** *Personalizar > Habilidades*, botón **+**, luego **+ Crear habilidad**, después **Cargar una habilidad**, y sube `evaluar-accion.zip`.
+3. **Actívala:** busca `evaluar-accion` en la lista y prende su interruptor.
 
 > Si tienes Claude en inglés, los nombres de los menús están en el [README en inglés](README.en-US.md#option-1--claudeai-web-and-desktop-app).
 
@@ -51,9 +57,9 @@ Necesitas tener activada la ejecución de código. La skill usa búsqueda web, a
 **Para todos tus proyectos** (skill personal):
 
 ```bash
-git clone https://github.com/v-dev-cl/claude-skill-evaluar-accion.git
+git clone https://github.com/v-dev-cl/evaluar-accion-skill.git
 mkdir -p ~/.claude/skills
-cp -r claude-skill-evaluar-accion/evaluar-accion ~/.claude/skills/
+cp -r evaluar-accion-skill/evaluar-accion ~/.claude/skills/
 ```
 
 **Solo para un repositorio** (skill de proyecto, se comparte con tu equipo al hacer commit): copia la carpeta `evaluar-accion` en `.claude/skills/` dentro de ese repo.
@@ -61,6 +67,41 @@ cp -r claude-skill-evaluar-accion/evaluar-accion ~/.claude/skills/
 En Windows la carpeta personal es `%USERPROFILE%\.claude\skills\`.
 
 Abre una sesión nueva de Claude Code y la vas a ver en el menú `/`.
+
+### Opción 3 — ChatGPT
+
+**Planes:** Skills está confirmado en Business, Enterprise, Edu y Healthcare. En Enterprise y Edu, un admin tiene que activar **Enable skill uploading**. En Plus y Pro la disponibilidad todavía no es clara: si no ves **Skills**, usa la alternativa de más abajo.
+
+1. En la barra lateral abre **Plugins** y entra a la pestaña **Skills**.
+2. Haz clic en **Create** y luego en **Upload from your computer**.
+3. Sube `evaluar-accion.zip`. ChatGPT la revisa antes de habilitarla; casi siempre queda disponible apenas termina, pero puede quedar marcada para revisión.
+
+> No encontré la versión oficial en español de estos menús. Si tienes ChatGPT en español, busca los equivalentes.
+
+**Alternativa sin Skills (por ejemplo, Plus):** crea un **Proyecto**, abre sus instrucciones y pega el contenido completo de [`evaluar-accion/SKILL.md`](evaluar-accion/SKILL.md). Los chats dentro de ese proyecto van a seguir las instrucciones.
+
+### Opción 4 — Gemini (app web y app para Mac)
+
+**Cuentas:** cuentas personales de Google (mayores de 18). Las de trabajo y educación llegan después. La carga funciona en [gemini.google.com](https://gemini.google.com) y en la app para Mac, no en el celular.
+
+1. En la barra lateral haz clic en **Personalizar** (si no lo ves, primero en **Más**) y arriba selecciona **Habilidades**.
+2. Haz clic en **Crear** y luego en **Subir**.
+3. Elige `evaluar-accion.zip` (también sirve la carpeta `evaluar-accion`) y haz clic en **Abrir**.
+4. Haz clic en **Subir**, revisa la habilidad y haz clic en **Crear**.
+
+### Opción 5 — Codex CLI, Gemini CLI y otros agentes
+
+Codex CLI y Gemini CLI leen la misma carpeta personal, `~/.agents/skills/`:
+
+```bash
+git clone https://github.com/v-dev-cl/evaluar-accion-skill.git
+mkdir -p ~/.agents/skills
+cp -r evaluar-accion-skill/evaluar-accion ~/.agents/skills/
+```
+
+Para un solo repositorio, cópiala en `.agents/skills/` dentro de ese repo.
+
+Otros agentes compatibles con [Agent Skills](https://agentskills.io/) (Cursor, GitHub Copilot, etc.) funcionan igual: copia la carpeta `evaluar-accion` en la carpeta de skills de esa herramienta. Revisa su documentación para saber cuál es.
 
 ## Uso
 
@@ -70,14 +111,21 @@ Abre una sesión nueva de Claude Code y la vas a ver en el menú `/`.
 evalúa NVDA, ¿vale la pena tenerla en la mira?
 ```
 
-En Claude.ai basta con pedirlo en lenguaje natural ("evalúa NKE"): Claude carga la skill sola cuando el pedido calza con su descripción.
+En todos los asistentes basta con pedirlo en lenguaje natural ("evalúa NKE"): la skill se carga sola cuando el pedido calza con su descripción. Para llamarla directamente:
+
+| Asistente | Cómo llamarla |
+|---|---|
+| Claude Code | `/evaluar-accion NKE` |
+| ChatGPT | `@evaluar-accion` |
+| Gemini | escribe `/` (o `@`) y elige la habilidad |
+| Codex | `$evaluar-accion NKE` |
 
 La respuesta trae: resumen con veredicto y puntaje, tabla del scorecard, por qué cayó, semáforo de mercado, niveles de entrada con fecha límite, catalizadores, riesgos y la lista de fuentes.
 
 ## Actualizar
 
-- **Claude.ai:** descarga el ZIP más reciente desde [Releases](https://github.com/v-dev-cl/claude-skill-evaluar-accion/releases/latest), borra la versión antigua en *Personalizar > Habilidades* y sube la nueva.
-- **Claude Code:** `git pull` en tu clon y vuelve a copiar la carpeta.
+- **Claude.ai, ChatGPT y Gemini:** descarga el ZIP más reciente desde [Releases](https://github.com/v-dev-cl/evaluar-accion-skill/releases/latest), borra la versión antigua y sube la nueva. En Gemini también puedes reemplazar la habilidad desde su menú de opciones.
+- **Claude Code, Codex CLI y Gemini CLI:** `git pull` en tu clon y vuelve a copiar la carpeta.
 
 ## Personalizar
 
@@ -87,7 +135,7 @@ Todo vive en [`evaluar-accion/SKILL.md`](evaluar-accion/SKILL.md), en texto plan
 - **Tamaño máximo por acción** (sección 5): 5 % del portafolio, o hasta 10 % en megacaps de alta calidad.
 - **Contexto tributario** (al final): está escrito para Chile (art. 107 y Global Complementario).
 
-Si editas la skill para Claude.ai, vuelve a comprimirla **con la carpeta incluida** (el ZIP tiene que contener `evaluar-accion/SKILL.md`, y el nombre de la carpeta tiene que coincidir con el `name` del archivo):
+Si editas la skill para subirla a Claude.ai, ChatGPT o Gemini, vuelve a comprimirla **con la carpeta incluida** (el ZIP tiene que contener `evaluar-accion/SKILL.md`, y el nombre de la carpeta tiene que coincidir con el `name` del archivo):
 
 ```bash
 zip -r evaluar-accion.zip evaluar-accion

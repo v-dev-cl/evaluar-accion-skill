@@ -1,8 +1,10 @@
-# evaluar-accion — a Claude skill
+# evaluar-accion — a skill for Claude, ChatGPT, Gemini, and more
 
 [🇨🇱 Español (Chile)](README.md) · 🇺🇸 **English (US)**
 
-A [Claude skill](https://support.claude.com/en/articles/12512180-use-skills-in-claude) that rates a single stock on a **100-point scorecard** and returns a verdict, a market traffic light, and a staged entry plan.
+A skill that rates a single stock on a **100-point scorecard** and returns a verdict, a market traffic light, and a staged entry plan.
+
+It follows the open [Agent Skills](https://agentskills.io/) standard (a folder with a `SKILL.md` file), so it works in Claude, ChatGPT, Gemini, Codex, Gemini CLI, and other compatible agents.
 
 It was built for someone investing from Chile in US stocks (and the occasional Chilean one), with a medium-to-long-term horizon who buys in tranches. **The skill is written in Spanish and always answers in Spanish.** See [Answer in English](#answer-in-english) to change that.
 
@@ -32,17 +34,21 @@ Give it several tickers and it scores each one, then ends with a comparison tabl
 
 ## Installation
 
+> **Required in every assistant: web search turned on.** The skill never uses prices or figures from memory. Without web search it tells you so and doesn't run the evaluation.
+
+Most options use the same ZIP: [`evaluar-accion.zip`](https://github.com/v-dev-cl/evaluar-accion-skill/releases/latest/download/evaluar-accion.zip) (from [Releases](https://github.com/v-dev-cl/evaluar-accion-skill/releases/latest)). Don't unzip it.
+
+> Don't use the repo's green **Code → Download ZIP** button. That archive includes the READMEs and other files, and the assistants reject it.
+
+The ChatGPT and Gemini steps come from each vendor's official docs (October 2026). Their menus change often, so the labels may differ slightly.
+
 ### Option 1 — Claude.ai (web and desktop app)
 
-Code execution must be turned on. The skill relies on web search, so that has to be available in your chat too.
-
-1. **Download the ZIP:** [`evaluar-accion.zip`](https://github.com/v-dev-cl/claude-skill-evaluar-accion/releases/latest/download/evaluar-accion.zip) (from [Releases](https://github.com/v-dev-cl/claude-skill-evaluar-accion/releases/latest)). Don't unzip it.
-   > Don't use the repo's green **Code → Download ZIP** button. That archive includes the READMEs and other files, and Claude rejects it.
-2. **Turn on code execution:**
+1. **Turn on code execution:**
    - **Free, Pro, and Max plans:** go to *Settings > Capabilities* and turn on **Code execution and file creation** (the updated Settings layout calls it **Create and edit files**).
    - **Team and Enterprise plans:** go to *Organization settings > Plugins & skills*, open the **Policy** tab, and make sure **Cloud code execution and file creation** and **Skills** are on. On Enterprise, an owner has to do this.
-3. **Upload the skill:** go to *Customize > Skills*, click **+**, then **+ Create skill**, choose **Upload a skill**, and upload `evaluar-accion.zip`.
-4. **Turn it on:** find `evaluar-accion` in the list and flip its toggle.
+2. **Upload the skill:** go to *Customize > Skills*, click **+**, then **+ Create skill**, choose **Upload a skill**, and upload `evaluar-accion.zip`.
+3. **Turn it on:** find `evaluar-accion` in the list and flip its toggle.
 
 > If your Claude interface is in Spanish, the [Spanish README](README.md#opción-1--claudeai-web-y-app-de-escritorio) has the menu names in Spanish.
 
@@ -51,9 +57,9 @@ Code execution must be turned on. The skill relies on web search, so that has to
 **For all your projects** (personal skill):
 
 ```bash
-git clone https://github.com/v-dev-cl/claude-skill-evaluar-accion.git
+git clone https://github.com/v-dev-cl/evaluar-accion-skill.git
 mkdir -p ~/.claude/skills
-cp -r claude-skill-evaluar-accion/evaluar-accion ~/.claude/skills/
+cp -r evaluar-accion-skill/evaluar-accion ~/.claude/skills/
 ```
 
 **For one repository only** (project skill, shared with your team when committed): copy the `evaluar-accion` folder into `.claude/skills/` inside that repo.
@@ -61,6 +67,39 @@ cp -r claude-skill-evaluar-accion/evaluar-accion ~/.claude/skills/
 On Windows, the personal folder is `%USERPROFILE%\.claude\skills\`.
 
 Start a new Claude Code session and it shows up in the `/` menu.
+
+### Option 3 — ChatGPT
+
+**Plans:** Skills is confirmed on Business, Enterprise, Edu, and Healthcare. On Enterprise and Edu, an admin has to turn on **Enable skill uploading**. Availability on Plus and Pro is still unclear. If you don't see **Skills**, use the fallback below.
+
+1. In the sidebar, open **Plugins** and go to the **Skills** tab.
+2. Click **Create**, then **Upload from your computer**.
+3. Upload `evaluar-accion.zip`. ChatGPT scans it first. Most skills are available as soon as the scan finishes, but some get flagged for review.
+
+**Fallback without Skills (for example, on Plus):** create a **Project**, open its instructions, and paste the full contents of [`evaluar-accion/SKILL.md`](evaluar-accion/SKILL.md). Chats inside that project follow the instructions.
+
+### Option 4 — Gemini (web app and Mac app)
+
+**Accounts:** personal Google accounts (18+). Work and school accounts come later. Uploading works on [gemini.google.com](https://gemini.google.com) and in the Mac app, not on mobile.
+
+1. In the sidebar, click **Customize** (if you don't see it, click **More** first), then select **Skills** at the top.
+2. Click **Create**, then **Upload**.
+3. Choose `evaluar-accion.zip` (the `evaluar-accion` folder works too) and click **Open**.
+4. Click **Upload**, review the skill, and click **Create**.
+
+### Option 5 — Codex CLI, Gemini CLI, and other agents
+
+Codex CLI and Gemini CLI both read the same personal folder, `~/.agents/skills/`:
+
+```bash
+git clone https://github.com/v-dev-cl/evaluar-accion-skill.git
+mkdir -p ~/.agents/skills
+cp -r evaluar-accion-skill/evaluar-accion ~/.agents/skills/
+```
+
+For one repository only, copy it into `.agents/skills/` inside that repo.
+
+Other [Agent Skills](https://agentskills.io/)-compatible agents (Cursor, GitHub Copilot, and others) work the same way: copy the `evaluar-accion` folder into that tool's skills folder. Check its docs for the location.
 
 ## Usage
 
@@ -70,7 +109,14 @@ Start a new Claude Code session and it shows up in the `/` menu.
 evaluate NVDA — is it worth putting on my watchlist?
 ```
 
-On Claude.ai you can just ask in plain language ("evaluate NKE"). Claude loads the skill on its own when a request matches its description.
+In every assistant you can just ask in plain language ("evaluate NKE"). The assistant loads the skill on its own when a request matches its description. To call it directly:
+
+| Assistant | How to call it |
+|---|---|
+| Claude Code | `/evaluar-accion NKE` |
+| ChatGPT | `@evaluar-accion` |
+| Gemini | type `/` (or `@`) and pick the skill |
+| Codex | `$evaluar-accion NKE` |
 
 The answer includes a summary with the verdict and score, the scorecard table, why the stock fell, the market traffic light, entry levels with a deadline, catalysts, risks, and a list of sources.
 
@@ -92,8 +138,8 @@ Then re-zip and re-upload it (see [Customize](#customize)). The scorecard logic 
 
 ## Update
 
-- **Claude.ai:** download the latest ZIP from [Releases](https://github.com/v-dev-cl/claude-skill-evaluar-accion/releases/latest), delete the old version under *Customize > Skills*, and upload the new one.
-- **Claude Code:** run `git pull` in your clone and copy the folder again.
+- **Claude.ai, ChatGPT, and Gemini:** download the latest ZIP from [Releases](https://github.com/v-dev-cl/evaluar-accion-skill/releases/latest), delete the old version, and upload the new one. Gemini also lets you replace a skill from its options menu.
+- **Claude Code, Codex CLI, and Gemini CLI:** run `git pull` in your clone and copy the folder again.
 
 ## Customize
 
@@ -103,7 +149,7 @@ Everything lives in [`evaluar-accion/SKILL.md`](evaluar-accion/SKILL.md) as plai
 - **Maximum position size** (section 5): 5% of the portfolio, or up to 10% for high-quality megacaps.
 - **Tax notes** (at the end): written for Chile (article 107 and the *Global Complementario* income tax). Replace them with your own country's rules.
 
-If you edit the skill for Claude.ai, re-zip it **with the folder included**. The ZIP must contain `evaluar-accion/SKILL.md`, and the folder name must match the `name` in the file:
+If you edit the skill to upload it to Claude.ai, ChatGPT, or Gemini, re-zip it **with the folder included**. The ZIP must contain `evaluar-accion/SKILL.md`, and the folder name must match the `name` in the file:
 
 ```bash
 zip -r evaluar-accion.zip evaluar-accion

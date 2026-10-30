@@ -9,7 +9,7 @@ Usar cuando el usuario entregue uno o más tickers (ej. "evalúa NKE", "/evaluar
 
 ## 1. Recolectar datos (siempre frescos, con fecha)
 
-Usar WebSearch (modo standard; extended solo si los resultados vienen pobres o viejos). Lanzar varias búsquedas en paralelo. Anotar la fecha de cada dato; no usar datos de memoria para precios, estimaciones ni resultados.
+Usar la búsqueda web disponible. Lanzar varias búsquedas en paralelo si la herramienta lo permite, y repetir con otras consultas si los resultados vienen pobres o viejos. Anotar la fecha de cada dato; no usar datos de memoria para precios, estimaciones ni resultados. Si no hay búsqueda web disponible, avisar al usuario y no inventar cifras.
 
 Datos mínimos:
 - Precio actual, variación en el año (YTD), rango de 52 semanas y caída desde el máximo.
