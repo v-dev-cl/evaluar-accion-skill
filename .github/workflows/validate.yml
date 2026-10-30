@@ -1,0 +1,39 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  skill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate SKILL.md frontmatter against the Agent Skills spec
+        run: |
+          set -euo pipefail
+          f=evaluar-accion/SKILL.md
+          fm=$(awk 'NR==1 && $0!="---"{exit 1} NR>1 && $0=="---"{exit} NR>1{print}' "$f")
+          name=$(printf '%s\n' "$fm" | sed -n 's/^name: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p')
+          desc=$(printf '%s\n' "$fm" | sed -n 's/^description: *"\{0,1\}\(.*[^"]\)"\{0,1\}$/\1/p')
+          [ "$name" = "evaluar-accion" ] || { echo "name must equal the folder name (got '$name')"; exit 1; }
+          printf '%s' "$name" | grep -Eq '^[a-z0-9]+(-[a-z0-9]+)*$' || { echo "name: lowercase, digits, single hyphens"; exit 1; }
+          [ -n "$desc" ] || { echo "description missing"; exit 1; }
+          dlen=$(printf '%s' "$desc" | wc -m); [ "$dlen" -le 1024 ] || { echo "description is $dlen chars (max 1024)"; exit 1; }
+          flen=$(printf '%s' "$fm" | wc -m); [ "$flen" -le 1024 ] || { echo "frontmatter is $flen chars (max 1024)"; exit 1; }
+          lines=$(wc -l < "$f"); [ "$lines" -le 500 ] || { echo "SKILL.md is $lines lines (keep under 500)"; exit 1; }
+          echo "ok: name=$name description=${dlen}c frontmatter=${flen}c body=${lines} lines"
+      - name: Scorecard blocks must sum to 100
+        run: |
+          set -euo pipefail
+          total=$(grep -E '^### [A-H]\. .* — [0-9]+$' evaluar-accion/SKILL.md | sed -E 's/.* — ([0-9]+)$/\1/' | paste -sd+ | bc)
+          [ "$total" = "100" ] || { echo "blocks sum to $total, not 100"; exit 1; }
+          echo "ok: blocks sum to 100"
+      - name: Both READMEs must exist and mention the same release link
+        run: |
+          set -euo pipefail
+          for r in README.md README.en-US.md; do
+            grep -q 'releases/latest/download/evaluar-accion.zip' "$r" || { echo "$r lacks the latest-release link"; exit 1; }
+          done
+          echo ok
