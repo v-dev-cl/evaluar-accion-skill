@@ -28,7 +28,9 @@ Está pensada para quien invierte desde Chile en acciones de EE.UU. (y a veces c
    | H. Señales internas | 5 |
 
 4. **Veredicto**: candidata a compra escalonada (75–100), watchlist con gatillos (60–74), esperar señales (45–59) o evitar por ahora (< 45), con reglas que topan el veredicto (por ejemplo, si la caída es estructural el máximo es watchlist).
-5. **Plan de entrada**: tres tramos con niveles concretos, una fecha límite, el tamaño máximo de la posición y qué invalidaría la tesis.
+5. **Plan de entrada según el veredicto**: si es candidata a compra, tres tramos con niveles concretos (el primero al precio actual) y una fecha límite; si es watchlist, los niveles son gatillos de reevaluación; si es esperar o evitar, solo las señales que harían reevaluar. Siempre con el tamaño máximo de la posición y qué invalidaría la tesis.
+
+Reglas de datos: cada cifra lleva fecha, un dato que no aparece se puntúa 0 y se marca «sin dato» (con 3 o más, el veredicto se topa), y si la empresa reporta en 10 días o menos la skill lo avisa y sugiere esperar el reporte.
 
 Si le pasas varios tickers, los evalúa uno por uno y cierra con una tabla comparativa.
 
@@ -133,13 +135,22 @@ Todo vive en [`evaluar-accion/SKILL.md`](evaluar-accion/SKILL.md), en texto plan
 
 - **Umbrales del semáforo** (sección 2) y **pesos del scorecard** (sección 3).
 - **Tamaño máximo por acción** (sección 5): 5 % del portafolio, o hasta 10 % en megacaps de alta calidad.
-- **Contexto tributario** (al final): está escrito para Chile (art. 107 y Global Complementario).
+- **Umbrales del semáforo** llevan fecha (octubre de 2026) y una nota para revisarlos cada 12 meses.
+- **Notas tributarias** (sección 7): escritas para Chile. Acciones chilenas con presencia bursátil: impuesto único de 10 % hasta el 31-12-2026 (Ley 21.420) e ingreso no renta desde el 01-01-2027 (art. 107, Ley 21.850); acciones extranjeras: Global Complementario y retención de 15 % sobre dividendos de EE.UU. por el convenio Chile–EE.UU. Confírmalas con un contador y reemplázalas si inviertes desde otro país.
 
 Si editas la skill para subirla a Claude.ai, ChatGPT o Gemini, vuelve a comprimirla **con la carpeta incluida** (el ZIP tiene que contener `evaluar-accion/SKILL.md`, y el nombre de la carpeta tiene que coincidir con el `name` del archivo):
 
 ```bash
-zip -r evaluar-accion.zip evaluar-accion
+zip -rX evaluar-accion.zip evaluar-accion
 ```
+
+## Publicar una versión (mantenedores)
+
+Cada PR corre `validate` (frontmatter según el estándar Agent Skills, bloques que suman 100, READMEs con el enlace de descarga). Para publicar:
+
+1. Sube `metadata.version` en `evaluar-accion/SKILL.md` y haz merge a `main`.
+2. Crea el tag con la misma versión: `git tag v1.2.0 && git push origin v1.2.0`.
+3. El workflow `release` arma `evaluar-accion.zip` (carpeta en la raíz del ZIP) y crea el release con el ZIP adjunto. El enlace `releases/latest/download/evaluar-accion.zip` de este README apunta solo al release: **sin tag no hay actualización** para Claude.ai, ChatGPT ni Gemini.
 
 ## Licencia
 

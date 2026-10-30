@@ -1,0 +1,33 @@
+name: release
+
+# Tag a commit on main as vX.Y.Z and this builds evaluar-accion.zip (folder at the ZIP root,
+# as Claude.ai / ChatGPT / Gemini expect) and attaches it to a GitHub release of the same name.
+# Both READMEs link releases/latest/download/evaluar-accion.zip, so the release IS the deploy.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  zip-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag must match the version in SKILL.md metadata
+        run: |
+          set -euo pipefail
+          v=$(sed -n 's/^  version: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' evaluar-accion/SKILL.md | head -1)
+          [ "v$v" = "$GITHUB_REF_NAME" ] || { echo "tag $GITHUB_REF_NAME != SKILL.md metadata.version $v"; exit 1; }
+      - name: Build the ZIP
+        run: |
+          set -euo pipefail
+          zip -rX evaluar-accion.zip evaluar-accion
+          unzip -l evaluar-accion.zip
+          unzip -l evaluar-accion.zip | grep -q ' evaluar-accion/SKILL.md$'
+      - name: Create the release with the ZIP attached
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" evaluar-accion.zip --title "$GITHUB_REF_NAME" --generate-notes

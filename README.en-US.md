@@ -28,7 +28,9 @@ It was built for someone investing from Chile in US stocks (and the occasional C
    | H. Insider signals | 5 |
 
 4. **Verdict**: staged-buy candidate (75–100), watchlist with triggers (60–74), wait for concrete signals (45–59), or avoid for now (< 45). Rules cap the verdict in some cases (for example, a structural decline caps it at watchlist).
-5. **Entry plan**: three tranches at concrete price levels, a deadline, a maximum position size, and what would invalidate the thesis.
+5. **Entry plan keyed to the verdict**: for a buy candidate, three tranches at concrete levels (the first at the current price) and a deadline; for a watchlist name, the levels are re-evaluation triggers; for wait or avoid, only the signals that would prompt a re-check. Always with a maximum position size and what would invalidate the thesis.
+
+Data rules: every figure is dated, a figure that cannot be found scores 0 and is marked "sin dato" (three or more cap the verdict), and if the company reports within 10 days the skill says so and suggests waiting for the report.
 
 Give it several tickers and it scores each one, then ends with a comparison table.
 
@@ -147,13 +149,22 @@ Everything lives in [`evaluar-accion/SKILL.md`](evaluar-accion/SKILL.md) as plai
 
 - **Traffic-light thresholds** (section 2) and **scorecard weights** (section 3).
 - **Maximum position size** (section 5): 5% of the portfolio, or up to 10% for high-quality megacaps.
-- **Tax notes** (at the end): written for Chile (article 107 and the *Global Complementario* income tax). Replace them with your own country's rules.
+- **Traffic-light thresholds** are dated (October 2026) with a note to review them every 12 months.
+- **Tax notes** (section 7): written for Chile. Chilean shares with *presencia bursátil*: 10% single tax until 2026-12-31 (Law 21.420) and tax-free again from 2027-01-01 (article 107, Law 21.850); foreign shares: *Global Complementario* income tax plus 15% withholding on US dividends under the Chile–US treaty. Confirm with an accountant and replace them with your own country's rules.
 
 If you edit the skill to upload it to Claude.ai, ChatGPT, or Gemini, re-zip it **with the folder included**. The ZIP must contain `evaluar-accion/SKILL.md`, and the folder name must match the `name` in the file:
 
 ```bash
-zip -r evaluar-accion.zip evaluar-accion
+zip -rX evaluar-accion.zip evaluar-accion
 ```
+
+## Publishing a release (maintainers)
+
+Every PR runs `validate` (frontmatter per the Agent Skills spec, blocks summing to 100, both READMEs carrying the download link). To publish:
+
+1. Bump `metadata.version` in `evaluar-accion/SKILL.md` and merge to `main`.
+2. Tag that version: `git tag v1.2.0 && git push origin v1.2.0`.
+3. The `release` workflow builds `evaluar-accion.zip` (folder at the ZIP root) and creates the release with the ZIP attached. The `releases/latest/download/evaluar-accion.zip` link in this README only follows releases: **no tag, no update** for Claude.ai, ChatGPT, or Gemini users.
 
 ## License
 
